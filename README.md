@@ -1,5 +1,15 @@
 # Reproducibility Guide
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20682944.svg)](https://doi.org/10.5281/zenodo.20682944)
+
+**Paper:** Haim Bar, Neil A. Spencer, Xingche Guo, Elizabeth D. Schifano, and Jun Yan (2025).
+"From Genealogy to Research-Ready Data: Curating, Validating, and Applying the Mathematics Genealogy Project."
+*Journal of Data Science.*
+
+**Zenodo deposit (code + data):** https://doi.org/10.5281/zenodo.20682944
+
+---
+
 This document describes how to reproduce the database curation and all
 results reported in the paper.  All code is contained in this
 repository.  No files need to be duplicated: the tar-zip archive for
