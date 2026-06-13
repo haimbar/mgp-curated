@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20682944.svg)](https://doi.org/10.5281/zenodo.20682944)
 
-**Paper:** Haim Bar, Neil A. Spencer, Xingche Guo, Elizabeth D. Schifano, and Jun Yan (2025).
+**Paper:** Haim Bar, Neil A. Spencer, Xingche Guo, Elizabeth D. Schifano, and Jun Yan (2026).
 "From Genealogy to Research-Ready Data: Curating, Validating, and Applying the Mathematics Genealogy Project."
 *Journal of Data Science.*
 
@@ -12,14 +12,25 @@
 
 This document describes how to reproduce the database curation and all
 results reported in the paper.  All code is contained in this
-repository.  No files need to be duplicated: the tar-zip archive for
-distribution will be assembled from the file lists at the end of each
-section.
+repository.
 
 Throughout this guide, `<code_dir>` refers to the directory where you
 cloned or unpacked this repository, and `<data_dir>` refers to any
 writable directory where you want to store the raw downloaded data and
 the SQLite database (these can be the same directory if you prefer).
+
+### Quick start for Part 2 (figures and tables only)
+
+If you only want to reproduce the figures and tables from the paper and
+do not need to re-run the full curation pipeline, you can download the
+pre-built database directly from the Zenodo deposit:
+
+```
+https://doi.org/10.5281/zenodo.20682944
+```
+
+Download `mg.db` from that page, place it in `<data_dir>`, and skip
+directly to [Part 2](#part-2--results) below.
 
 ---
 
