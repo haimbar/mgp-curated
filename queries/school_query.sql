@@ -1,0 +1,13 @@
+SELECT
+    sc.CANONICAL_NAME,
+    COUNT(*)                         AS num_degrees,
+    COUNT(DISTINCT d.DEGMGID)        AS num_graduates,
+    GROUP_CONCAT(DISTINCT d.COUNTRY) AS countries
+FROM DEGREES   AS d
+JOIN SCHOOL_CANONICAL AS sc
+     ON sc.RAW_NAME = d.SCHOOL
+WHERE d.SCHOOL IS NOT NULL
+  AND d.SCHOOL <> ''
+GROUP BY sc.CANONICAL_NAME
+ORDER BY num_graduates DESC
+LIMIT 20;

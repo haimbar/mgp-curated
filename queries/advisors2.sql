@@ -1,0 +1,7 @@
+SELECT p.LNAME || ', ' || p.FNAME AS advisor,
+       COUNT(*) AS students
+FROM STUDENTS s
+JOIN PERSONS p ON s.ADVISOR = p.MGID
+GROUP BY s.ADVISOR
+ORDER BY students DESC
+LIMIT 10;
