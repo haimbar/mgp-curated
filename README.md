@@ -6,7 +6,7 @@
 "From Genealogy to Research-Ready Data: Curating, Validating, and Applying the Mathematics Genealogy Project."
 *Journal of Data Science.*
 
-**Zenodo deposit (curated database + code):** https://doi.org/10.5281/zenodo.23652111
+**Zenodo deposit (curated database):** https://doi.org/10.5281/zenodo.23652111
 
 ---
 
