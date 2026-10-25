@@ -1,12 +1,12 @@
 # Curated Mathematics Genealogy Project: code and reproducibility guide
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20682944.svg)](https://doi.org/10.5281/zenodo.20682944)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23652111.svg)](https://doi.org/10.5281/zenodo.23652111)
 
 **Paper:** Haim Bar, Neil A. Spencer, Xingche Guo, Elizabeth D. Schifano, and Jun Yan (2026).
 "From Genealogy to Research-Ready Data: Curating, Validating, and Applying the Mathematics Genealogy Project."
 *Journal of Data Science.*
 
-**Zenodo deposit (curated database + code):** https://doi.org/10.5281/zenodo.20682944
+**Zenodo deposit (curated database + code):** https://doi.org/10.5281/zenodo.23652111
 
 ---
 
@@ -20,7 +20,7 @@ the Math Genealogy Project or ProQuest is needed.
 # 1. Get the code (this repository) and the curated database (Zenodo deposit).
 git clone https://github.com/haimbar/mgp-curated.git
 cd mgp-curated
-#    Download mg.db from https://doi.org/10.5281/zenodo.20682944 into this folder.
+#    Download mg.db from https://doi.org/10.5281/zenodo.23652111 into this folder.
 #    (optional) check the download:   shasum -a 256 -c mg.db.sha256
 
 # 2. Install the Python packages (Python 3.10 or later).
