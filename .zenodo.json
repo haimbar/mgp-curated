@@ -1,0 +1,42 @@
+{
+  "title": "A curated math genealogy dataset",
+  "upload_type": "dataset",
+  "creators": [
+    {
+      "name": "Bar, Haim",
+      "affiliation": "Department of Statistics, University of Connecticut, Storrs, CT, USA"
+    },
+    {
+      "name": "Spencer, Neil A.",
+      "affiliation": "Department of Statistics, University of Connecticut, Storrs, CT, USA"
+    },
+    {
+      "name": "Guo, Xingche",
+      "affiliation": "Department of Statistics, University of Connecticut, Storrs, CT, USA"
+    },
+    {
+      "name": "Schifano, Elizabeth D.",
+      "affiliation": "Department of Statistics, University of Connecticut, Storrs, CT, USA"
+    },
+    {
+      "name": "Yan, Jun",
+      "affiliation": "Department of Statistics, University of Connecticut, Storrs, CT, USA"
+    }
+  ],
+  "description": "<p>Curated relational database (SQLite) of the Mathematics Genealogy Project, with 339,179 degree records, 337,248 individuals, and 407,783 advisor&ndash;student pairs, together with the code that builds it and reproduces the results of the accompanying paper. The curation adds canonical institution names, inferred thesis languages, and imputed broad subject fields. The file <code>mg.db</code> is the database; <code>reproduce.py</code> recomputes the paper's tables and figures from it.</p><p>Paper: H. Bar, N. A. Spencer, X. Guo, E. D. Schifano, and J. Yan (2026), &ldquo;From Genealogy to Research-Ready Data: Curating, Validating, and Applying the Mathematics Genealogy Project,&rdquo; <em>Journal of Data Science</em>.</p>",
+  "keywords": [
+    "Mathematics Genealogy Project",
+    "advisor-student networks",
+    "doctoral dissertations",
+    "field imputation",
+    "reproducibility"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/haimbar/mgp-curated",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "license": "MIT"
+}
