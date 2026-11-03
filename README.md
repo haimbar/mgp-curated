@@ -17,21 +17,31 @@ reproduced from the database alone.  No account, credentials, or download from
 the Math Genealogy Project or ProQuest is needed.
 
 ```bash
-# 1. Get the code (this repository) and the curated database (Zenodo deposit).
+# 1. Get the code: clone this repository (or unzip the code archive supplied with the paper).
 git clone https://github.com/haimbar/mgp-curated.git
 cd mgp-curated
-#    Download mg.db from https://doi.org/10.5281/zenodo.23652111 into this folder.
-#    (optional) check the download:   shasum -a 256 -c mg.db.sha256
 
 # 2. Install the Python packages (Python 3.10 or later).
 pip install -r requirements.txt
 
 # 3. Run everything.
-python3 reproduce.py --db mg.db --out results
+python3 reproduce.py
 ```
+
+That is all.  The curated database is **not** part of the code (it is 124 MB), but
+you do not need to download it yourself.  The first time you run `reproduce.py`
+it looks for `mg.db` in the current folder; if the file is not there, it downloads
+it from the Zenodo deposit (<https://doi.org/10.5281/zenodo.23652111>) and checks
+it against the SHA-256 checksum in `mg.db.sha256`.  On every later run the file is
+found and nothing is downloaded.  To use a copy of the database stored elsewhere,
+pass its path (`--db /path/to/mg.db`); the download is then also skipped.  If the
+download fails (for example, without internet access), save `mg.db` from the
+Zenodo page into this folder by hand and run the script again.  The outputs are
+written to `results/` (change it with `--out`).
 
 `reproduce.py` does the following, and prints `PASS` or `FAIL` for every value:
 
+0. Makes sure that `mg.db` is available (downloading it the first time, as above).
 1. Recomputes, with SQL, the counts and tables in the paper that come from the
    database (Tables 1-3 and S1-S13, and the numbers quoted in the text), and
    compares each with the value printed in the paper.
@@ -230,7 +240,7 @@ pooled ratios in Tables 4 and 5.
 ## Files
 
 ```
-reproduce.py                      one-command reproduction (start here)
+reproduce.py                      one-command reproduction (start here); downloads mg.db on first use
 requirements.txt
 mg.db.sha256                      checksum of the database in the Zenodo deposit
 queries/                          SQL listings from the supplement

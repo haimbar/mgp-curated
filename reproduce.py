@@ -4,10 +4,12 @@ reproduce.py  --  Reproduce the results of the paper from the curated database.
 
 Usage
 -----
-    python3 reproduce.py --db /path/to/mg.db [--out results] [--quick]
+    python3 reproduce.py [--db mg.db] [--out results] [--quick]
 
-The only input is the curated SQLite database `mg.db` (download it from the
-Zenodo deposit).  Nothing is downloaded from the Math Genealogy Project or
+The only input is the curated SQLite database `mg.db`.  If the file is not found
+(the first time you run the script), it is downloaded automatically from the
+Zenodo deposit (about 124 MB) and checked against mg.db.sha256; if it is found,
+nothing is downloaded.  Nothing is downloaded from the Math Genealogy Project or
 ProQuest, and no credentials are needed.
 
 What it does
@@ -34,15 +36,21 @@ which skips the figure scripts and the checks that depend on them).
 
 import argparse
 import csv
+import hashlib
 import os
 import re
 import sqlite3
 import subprocess
 import sys
 import time
+import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+
+# The curated database in the Zenodo deposit (version 2.0, DOI 10.5281/zenodo.23652111).
+ZENODO_DOI = "10.5281/zenodo.23652111"
+ZENODO_URL = "https://zenodo.org/records/23652111/files/mg.db?download=1"
 
 CHECKS = []          # (section, description, observed, expected, ok)
 
@@ -445,6 +453,75 @@ def coverage_checks(con, path):
 
 
 # ----------------------------------------------------------------------
+# 4. Getting the database
+# ----------------------------------------------------------------------
+def sha256_of(path, block=1 << 20):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(block), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def expected_sha256():
+    """The checksum of the deposited mg.db, from mg.db.sha256 next to this script."""
+    f = HERE / "mg.db.sha256"
+    if f.exists():
+        return f.read_text().split()[0].lower()
+    return None
+
+
+def ensure_database(db):
+    """Make sure `db` exists.  If it is not there, download it from Zenodo.
+
+    The download goes to `<db>.part` and is renamed to `db` only after it has been
+    checked against mg.db.sha256, so an interrupted or corrupted download is never
+    mistaken for the database.  If `db` already exists nothing is downloaded.
+    """
+    if db.exists():
+        print(f"Found {db} ({db.stat().st_size / 1e6:.0f} MB); skipping the download.", flush=True)
+        return
+    manual = (f"Download mg.db manually from https://doi.org/{ZENODO_DOI}, save it as\n"
+              f"  {db}\nand run this script again.")
+    print(f"{db} not found.  Downloading it from Zenodo (doi:{ZENODO_DOI}, about 124 MB) ...",
+          flush=True)
+    part = db.with_name(db.name + ".part")
+    db.parent.mkdir(parents=True, exist_ok=True)
+    req = urllib.request.Request(ZENODO_URL, headers={"User-Agent": "reproduce.py (mgp-curated)"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp, open(part, "wb") as out:
+            total = int(resp.headers.get("Content-Length") or 0)
+            done, t0, last = 0, time.time(), 0.0
+            while True:
+                chunk = resp.read(1 << 20)
+                if not chunk:
+                    break
+                out.write(chunk)
+                done += len(chunk)
+                if time.time() - last > 1.0:
+                    last = time.time()
+                    pct = f"{100 * done / total:3.0f}%" if total else ""
+                    print(f"\r  {done / 1e6:6.1f} MB {pct}", end="", flush=True)
+            print(f"\r  {done / 1e6:6.1f} MB, done in {time.time() - t0:.0f}s      ", flush=True)
+        if total and done != total:
+            raise OSError(f"incomplete download ({done} of {total} bytes)")
+    except Exception as e:                       # network, TLS certificate, disk, ...
+        part.unlink(missing_ok=True)
+        sys.exit(f"\nCould not download the database: {e}\n{manual}")
+
+    want = expected_sha256()
+    if want is None:
+        print("  (mg.db.sha256 not found; the download was not verified)", flush=True)
+    else:
+        got = sha256_of(part)
+        if got != want:
+            part.unlink(missing_ok=True)
+            sys.exit(f"The downloaded file failed the SHA-256 check (got {got}, expected {want}).\n{manual}")
+        print("  SHA-256 verified.", flush=True)
+    part.replace(db)
+
+
+# ----------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--db", default="mg.db", help="path to the curated database (default: ./mg.db)")
@@ -455,9 +532,7 @@ def main():
     args = ap.parse_args()
 
     db = Path(args.db).expanduser().resolve()
-    if not db.exists():
-        sys.exit(f"Database not found: {db}\nDownload mg.db from the Zenodo deposit "
-                 f"(see README.md) and pass its path with --db.")
+    ensure_database(db)
     out = Path(args.out).expanduser().resolve()
     out.mkdir(parents=True, exist_ok=True)
 
